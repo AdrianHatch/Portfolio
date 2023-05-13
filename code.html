@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=480, initial-scale=1">
+    <link rel="stylesheet" href="main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.jsc"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@1.34.0/tsparticles.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+
+    <div>
+        <svg class="curzr" hidden>
+          <filter id="motionblur" x="-100%" y="-100%" width="400%" height="400%">
+            <feGaussianBlur class="curzr-motion-blur" stdDeviation="0, 0"/>
+          </filter>
+          <circle cx="50%" cy="50%" r="10" fill="#fff" filter="url(#motionblur)" />
+        </svg>
+        <script>
+    
+    class MotionBlur {
+      constructor() {
+        this.root = document.body
+        this.cursor = document.querySelector(".curzr")
+        this.filter = document.querySelector(".curzr-motion-blur")
+    
+        this.position = {
+          distanceX: 0, 
+          distanceY: 0,
+          pointerX: 0,
+          pointerY: 0,
+        },
+        this.previousPointerX = 0
+        this.previousPointerY = 0
+        this.angle = 0
+        this.previousAngle = 0
+        this.angleDisplace = 0
+        this.degrees = 57.296
+        this.cursorSize = 25
+        this.moving = false
+    
+        this.cursorStyle = {
+          boxSizing: 'border-box',
+          position: 'fixed',
+          top: `${ this.cursorSize / -2 }px`,
+          left: `${ this.cursorSize / -2 }px`,
+          zIndex: '2147483647',
+          width: `${ this.cursorSize }px`,
+          height: `${ this.cursorSize }px`,
+          borderRadius: '50%',
+          overflow: 'visible',
+          transition: '200ms, transform 10ms',
+          userSelect: 'none',
+          pointerEvents: 'none'
+        }
+    
+        this.init(this.cursor, this.cursorStyle)
+      }
+    
+      init(el, style) {
+        Object.assign(el.style, style)
+        this.cursor.removeAttribute("hidden")
+        
+      }
+    
+      move(event) {
+        this.previousPointerX = this.position.pointerX
+        this.previousPointerY = this.position.pointerY
+        this.position.pointerX = event.pageX + this.root.getBoundingClientRect().x
+        this.position.pointerY = event.pageY + this.root.getBoundingClientRect().y
+        this.position.distanceX = Math.min(Math.max(this.previousPointerX - this.position.pointerX, -20), 20)
+        this.position.distanceY = Math.min(Math.max(this.previousPointerY - this.position.pointerY, -20), 20)
+    
+        this.cursor.style.transform = `translate3d(${this.position.pointerX}px, ${this.position.pointerY}px, 0)`
+        this.rotate(this.position)
+        this.moving ? this.stop() : this.moving = true
+      }
+    
+      rotate(position) {
+        let unsortedAngle = Math.atan(Math.abs(position.distanceY) / Math.abs(position.distanceX)) * this.degrees
+        
+        if (isNaN(unsortedAngle)) {
+          this.angle = this.previousAngle
+        } else {
+          if (unsortedAngle <= 45) {
+            if (position.distanceX * position.distanceY >= 0) {
+              this.angle = +unsortedAngle
+            } else {
+              this.angle = -unsortedAngle
+            }
+            this.filter.setAttribute('stdDeviation', `${Math.abs(this.position.distanceX / 2)}, 0`)
+          } else {
+            if (position.distanceX * position.distanceY <= 0) {
+              this.angle = 180 - unsortedAngle
+            } else {
+              this.angle = unsortedAngle
+            }
+            this.filter.setAttribute('stdDeviation', `${Math.abs(this.position.distanceY / 2)}, 0`)
+          }
+        }
+        this.cursor.style.transform += ` rotate(${this.angle}deg)`
+        this.previousAngle = this.angle
+      }
+    
+      stop() {
+        setTimeout(() => {
+          this.filter.setAttribute('stdDeviation', '0, 0')
+          this.moving = false
+        }, 50)
+      }
+    
+      remove() {
+        this.cursor.remove()
+      }
+    }
+    
+    (() => {
+      const cursor = new MotionBlur()
+      if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        document.onmousemove = function (event) {
+          cursor.move(event)
+        }
+      } else {
+        cursor.remove()
+      }
+    })()
+        </script>
+        </div>
+    
+    <div>
+      <header class="header-2">
+        <h3>
+          <img src="images/White Hot.png">
+        </h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Me</a></li>
+          <li><a href="code.html">Coding</a></li>
+          <li><a href="https://lavender-cyan-twrr.squarespace.com">Blog</a></li>
+        </ul>
+        <div class="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>      
+    </header>
+   
+    <section id="front-end-section">
+        <div class="background">
+          <img src="images/Screenshot 2023-05-10 at 2.48.41 PM.jpeg" alt="">
+          <h1>Front End Development</h1>
+          <h2>Scroll to view my projects</h2>
+        </div>
+      </section>
+      
+
+
+    <section>
+    <div class="project">
+        <div class="description">
+          <h2>Pickology.com</h2>
+          <p>
+            This is the first website I ever built! Pickology is an idea that I have had for years and coding helped me bring imagination into reality. This webstie represents my love for guitar, music, and the value of a musical community. Check it out at <a href="http://www.example.com" target="_blank">www.example.com</a>.
+          </p>
+        </div>
+        <div class="image">
+          <a href="http://www.example.com" target="_blank">
+            <img src="images/Screenshot 2023-05-09 at 3.07.10 PM.jpeg" alt="Project Title">
+          </a>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="description">
+          <h2>BrightEyes.com</h2>
+          <p>
+            Maybe you are a gamer like me or you spend a lot of time in front of a computer-screen, or you could just be someone who appreciates style. Whatever the case is, I created the idea of BrightEyes for people who need to protect their eyes and for those who love being fly!  Check it out at <a href="http://www.example.com" target="_blank">www.example.com</a>.
+          </p>
+        </div>
+        <div class="image">
+          <a href="http://www.example.com" target="_blank">
+            <img src="images/Screenshot 2023-05-09 at 3.07.34 PM.jpeg" alt="Project Title">
+          </a>
+        </div>
+      </div>
+
+
+      <div class="project">
+        <div class="description">
+          <h2>AdaptTech.com</h2>
+          <p>
+            I know I have talked a lot about my passion for gaming, but I just couldn't help myself. Adapt is a company I created with the purpose to make the game easier for those who want to take their game to the next step. Customizable controllers where what helped me level up, my hope is that Adapt does that for others too. Check it out at <a href="http://www.example.com" target="_blank">www.example.com</a>.
+          </p>
+        </div>
+        <div class="image">
+          <a href="http://www.example.com" target="_blank">
+            <img src="images/Screenshot 2023-05-09 at 3.08.36 PM.jpeg" alt="Project Title">
+          </a>
+        </div>
+      </div>
+      </section>
+
+
+
+
+
+      <footer id="bottom">
+        <div class="widgets">
+          <a href="index.html"><img src="images/White Hot.png" alt=""></a>
+          <div class="widget">
+            <a href="https://lavender-cyan-twrr.squarespace.com">Not Inclined</a>
+          </div>
+          <div class="widget">
+            <a href="https://www.linkedin.com/in/adrian-hatch-a1416925a">Linkedin</a>
+          </div>
+          <div class="widget">
+            <a href="index.html">Instagram</a>
+          </div>
+          <div class="widget">
+            <a href="https://twitter.com/AjayHatch">Twitter</a>
+          </div>
+        </div>
+        <div class="copy">
+            <a href="index.html">
+                Adrian Hatch </a><a href="#one">Scroll top &#x2191;</a>
+        </div>
+      </footer>
+      </div>
+         
+       <!-- <script src="script.js"></script> -->
+       </body>
+      </html>
+      
+
+</body>
+</html>

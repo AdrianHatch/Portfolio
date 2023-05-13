@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=480, initial-scale=1">
+    <link rel="stylesheet" href="main.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.jsc"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@1.34.0/tsparticles.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>Adrian hatch Portfolio</title>
+  </head>
+  <body>
+
+    <div>
+    <svg class="curzr" hidden>
+      <filter id="motionblur" x="-100%" y="-100%" width="400%" height="400%">
+        <feGaussianBlur class="curzr-motion-blur" stdDeviation="0, 0"/>
+      </filter>
+      <circle cx="50%" cy="50%" r="10" fill="#fff" filter="url(#motionblur)" />
+    </svg>
+    <script>
+
+class MotionBlur {
+  constructor() {
+    this.root = document.body
+    this.cursor = document.querySelector(".curzr")
+    this.filter = document.querySelector(".curzr-motion-blur")
+
+    this.position = {
+      distanceX: 0, 
+      distanceY: 0,
+      pointerX: 0,
+      pointerY: 0,
+    },
+    this.previousPointerX = 0
+    this.previousPointerY = 0
+    this.angle = 0
+    this.previousAngle = 0
+    this.angleDisplace = 0
+    this.degrees = 57.296
+    this.cursorSize = 25
+    this.moving = false
+
+    this.cursorStyle = {
+      boxSizing: 'border-box',
+      position: 'fixed',
+      top: `${ this.cursorSize / -2 }px`,
+      left: `${ this.cursorSize / -2 }px`,
+      zIndex: '2147483647',
+      width: `${ this.cursorSize }px`,
+      height: `${ this.cursorSize }px`,
+      borderRadius: '50%',
+      overflow: 'visible',
+      transition: '200ms, transform 10ms',
+      userSelect: 'none',
+      pointerEvents: 'none'
+    }
+
+    this.init(this.cursor, this.cursorStyle)
+  }
+
+  init(el, style) {
+    Object.assign(el.style, style)
+    this.cursor.removeAttribute("hidden")
+    
+  }
+
+  move(event) {
+    this.previousPointerX = this.position.pointerX
+    this.previousPointerY = this.position.pointerY
+    this.position.pointerX = event.pageX + this.root.getBoundingClientRect().x
+    this.position.pointerY = event.pageY + this.root.getBoundingClientRect().y
+    this.position.distanceX = Math.min(Math.max(this.previousPointerX - this.position.pointerX, -20), 20)
+    this.position.distanceY = Math.min(Math.max(this.previousPointerY - this.position.pointerY, -20), 20)
+
+    this.cursor.style.transform = `translate3d(${this.position.pointerX}px, ${this.position.pointerY}px, 0)`
+    this.rotate(this.position)
+    this.moving ? this.stop() : this.moving = true
+  }
+
+  rotate(position) {
+    let unsortedAngle = Math.atan(Math.abs(position.distanceY) / Math.abs(position.distanceX)) * this.degrees
+    
+    if (isNaN(unsortedAngle)) {
+      this.angle = this.previousAngle
+    } else {
+      if (unsortedAngle <= 45) {
+        if (position.distanceX * position.distanceY >= 0) {
+          this.angle = +unsortedAngle
+        } else {
+          this.angle = -unsortedAngle
+        }
+        this.filter.setAttribute('stdDeviation', `${Math.abs(this.position.distanceX / 2)}, 0`)
+      } else {
+        if (position.distanceX * position.distanceY <= 0) {
+          this.angle = 180 - unsortedAngle
+        } else {
+          this.angle = unsortedAngle
+        }
+        this.filter.setAttribute('stdDeviation', `${Math.abs(this.position.distanceY / 2)}, 0`)
+      }
+    }
+    this.cursor.style.transform += ` rotate(${this.angle}deg)`
+    this.previousAngle = this.angle
+  }
+
+  stop() {
+    setTimeout(() => {
+      this.filter.setAttribute('stdDeviation', '0, 0')
+      this.moving = false
+    }, 50)
+  }
+
+  remove() {
+    this.cursor.remove()
+  }
+}
+
+(() => {
+  const cursor = new MotionBlur()
+  if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    document.onmousemove = function (event) {
+      cursor.move(event)
+    }
+  } else {
+    cursor.remove()
+  }
+})()
+    </script>
+    </div>
+
+  <header class="header">
+    <h3>
+      <img src="images/White Hot.png">
+    </h3>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html"> About Me</a></li>
+      <li><a href="code.html">Coding</a></li>
+      <li><a href="https://lavender-cyan-twrr.squarespace.com">Blog</a></li>
+    </ul>
+
+</header>
+
+
+ <!-- Title Section -->
+  <section id="title">
+  <div class="title">
+    <div id="tsparticles"></div>
+    <h1 data-value="Hello World">Hello World</h1>
+    <script>
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+let interval = null;
+
+document.querySelector("h1").onmouseover = event => {  
+  let iteration = 0;
+  
+  clearInterval(interval);
+  
+  interval = setInterval(() => {
+    event.target.innerText = event.target.innerText
+      .split("")
+      .map((letter, index) => {
+        if(index < iteration) {
+          return event.target.dataset.value[index];
+        }
+      
+        return letters[Math.floor(Math.random() * 26)]
+      })
+      .join("");
+    
+    if(iteration >= event.target.dataset.value.length){ 
+      clearInterval(interval);
+    }
+    
+    iteration += 1 / 3;
+  }, 30);
+}
+</script>
+<script>tsParticles.load("tsparticles", {
+      fullScreen: {
+        enable: true
+      },
+      fpsLimit: 60,
+      particles: {
+        groups: {
+          z5000: {
+            number: {
+              value: 70
+            },
+            zIndex: {
+              value: 5000
+            }
+          },
+          z7500: {
+            number: {
+              value: 30
+            },
+            zIndex: {
+              value: 75
+            }
+          },
+          z2500: {
+            number: {
+              value: 50
+            },
+            zIndex: {
+              value: 25
+            }
+          },
+          z1000: {
+            number: {
+              value: 40
+            },
+            zIndex: {
+              value: 10
+            }
+          }
+        },
+        number: {
+          value: 200,
+          density: {
+            enable: false,
+            value_area: 800
+          }
+        },
+        color: {
+          value: "#fff",
+          animation: {
+            enable: false,
+            speed: 20,
+            sync: true
+          }
+        },
+        shape: {
+          type: "circle"
+        },
+        opacity: {
+          value: 1,
+          random: false,
+          animation: {
+            enable: false,
+            speed: 3,
+            minimumValue: 0.1,
+            sync: false
+          }
+        },
+        size: {
+          value: 3
+        },
+        links: {
+          enable: false,
+          distance: 100,
+          color: "#ffffff",
+          opacity: 0.4,
+          width: 1
+        },
+        move: {
+          angle: {
+            value: 10,
+            offset: 0
+          },
+          enable: true,
+          speed: 5,
+          direction: "right",
+          random: false,
+          straight: true,
+          outModes: {
+            default: "out"
+          },
+          attract: {
+            enable: false,
+            rotateX: 600,
+            rotateY: 1200
+          }
+        },
+        zIndex: {
+          value: 5,
+          opacityRate: 0.5
+        }
+      },
+      interactivity: {
+        detectsOn: "canvas",
+        events: {
+          onHover: {
+            enable: false,
+            mode: "repulse"
+          },
+          onClick: {
+            enable: true,
+            mode: "push"
+          },
+          resize: true
+        },
+        modes: {
+          grab: {
+            distance: 400,
+            links: {
+              opacity: 1
+            }
+          },
+          bubble: {
+            distance: 400,
+            size: 40,
+            duration: 2,
+            opacity: 0.8
+          },
+          repulse: {
+            distance: 200
+          },
+          push: {
+            quantity: 4,
+            groups: ["z5000", "z7500", "z2500", "z1000"]
+          },
+          remove: {
+            quantity: 2
+          }
+        }
+      },
+      detectRetina: true,
+      background: {
+        color: "#000000",
+        image: "",
+        position: "50% 50%",
+        repeat: "no-repeat",
+        size: "cover"
+      },
+      emitters: {
+        position: {
+          y: 55,
+          x: -30
+        },
+        rate: {
+          delay: 7,
+          quantity: 1
+        },
+        size: {
+          width: 0,
+          height: 0
+        },
+        particles: {
+          shape: {
+            type: "images",
+            options: {
+              images: [
+                {
+                  src: "https://particles.js.org/images/amongus_blue.png",
+                  width: 205,
+                  height: 267
+                },
+                {
+                  src: "https://particles.js.org/images/amongus_cyan.png",
+                  width: 207,
+                  height: 265
+                },
+                {
+                  src: "https://particles.js.org/images/amongus_green.png",
+                  width: 204,
+                  height: 266
+                },
+                {
+                  src: "https://particles.js.org/images/amongus_lime.png",
+                  width: 206,
+                  height: 267
+                },
+                {
+                  src: "https://particles.js.org/images/amongus_orange.png",
+                  width: 205,
+                  height: 265
+                },
+                {
+                  src: "https://particles.js.org/images/amongus_pink.png",
+                  width: 205,
+                  height: 265
+                },
+                {
+                  src: "https://particles.js.org/images/amongus_red.png",
+                  width: 204,
+                  height: 267
+                },
+                {
+                  src: "https://particles.js.org/images/amongus_white.png",
+                  width: 205,
+                  height: 267
+                }
+              ]
+            }
+          },
+          size: {
+            value: 40
+          },
+          move: {
+            speed: 10,
+            outModes: {
+              default: "destroy",
+              left: "none"
+            },
+            straight: true
+          },
+          zIndex: {
+            value: 0
+          },
+          rotate: {
+            value: {
+              min: 0,
+              max: 360
+            },
+            animation: {
+              enable: true,
+              speed: 10,
+              sync: true
+            }
+          }
+        }
+      }
+    });
+     </script>
+  </div>
+  </section>
+
+  <div class="arrow bounce" onclick="smoothScroll(event)">
+     <style>
+      @-moz-keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -moz-transform: translateY(0);
+    transform: translateY(0);
+  }
+  40% {
+    -moz-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+  60% {
+    -moz-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@-webkit-keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  40% {
+    -webkit-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+  60% {
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  40% {
+    -moz-transform: translateY(-30px);
+    -ms-transform: translateY(-30px);
+    -webkit-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+  60% {
+    -moz-transform: translateY(-15px);
+    -ms-transform: translateY(-15px);
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+
+.arrow {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  margin-left: -20px;
+  width: 40px;
+  height: 40px;
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik0yOTMuNzUxLDQ1NS44NjhjLTIwLjE4MSwyMC4xNzktNTMuMTY1LDE5LjkxMy03My42NzMtMC41OTVsMCwwYy0yMC41MDgtMjAuNTA4LTIwLjc3My01My40OTMtMC41OTQtNzMuNjcyICBsMTg5Ljk5OS0xOTBjMjAuMTc4LTIwLjE3OCw1My4xNjQtMTkuOTEzLDczLjY3MiwwLjU5NWwwLDBjMjAuNTA4LDIwLjUwOSwyMC43NzIsNTMuNDkyLDAuNTk1LDczLjY3MUwyOTMuNzUxLDQ1NS44Njh6Ii8+DQo8cGF0aCBmaWxsPSIjRkZGRkZGIiBkPSJNMjIwLjI0OSw0NTUuODY4YzIwLjE4LDIwLjE3OSw1My4xNjQsMTkuOTEzLDczLjY3Mi0wLjU5NWwwLDBjMjAuNTA5LTIwLjUwOCwyMC43NzQtNTMuNDkzLDAuNTk2LTczLjY3MiAgbC0xOTAtMTkwYy0yMC4xNzgtMjAuMTc4LTUzLjE2NC0xOS45MTMtNzMuNjcxLDAuNTk1bDAsMGMtMjAuNTA4LDIwLjUwOS0yMC43NzIsNTMuNDkyLTAuNTk1LDczLjY3MUwyMjAuMjQ5LDQ1NS44Njh6Ii8+DQo8L3N2Zz4=);
+  background-size: contain;
+}
+
+.bounce {
+  -moz-animation: bounce 2s infinite;
+  -webkit-animation: bounce 2s infinite;
+  animation: bounce 2s infinite;
+}
+
+    </style>
+    <script> 
+    const arrow = document.querySelector('.arrow');
+
+arrow.addEventListener('click', function() {
+  const sectionOne = document.querySelector('#one');
+  sectionOne.scrollIntoView({ behavior: 'smooth' });
+});
+    </script>
+</div>
+
+  <section id="one">
+    <div class="content">
+      <div>
+        <h1> Welcome </h1>
+        <svg class="title">
+          <text x="0" y="40"> Welcome</text>
+          <path d="M 0 66 50 61"></path>
+        </svg>
+        <p class="lead"> This is my professional portfolio that I have designed to give you an overview of my skill set and expertise. Hopefully this website will allow you to find out who I am and how to make an informed decision about how best to leverage my unique skill set for your specific needs.</p>
+        <p class="lead"> - Cheers</p>
+      </div>
+      <div>
+        <img href="aboutme.html"src="images/400px.png" alt="pic" id="main__img">
+      </div>
+  </section>
+
+  <section id="two">
+    <h2>My<span>Projects</span></h2>
+    <p>Below, you will see a variety of projects that I have, or am currently working on</p>
+    <div class="blocks">
+      <div class="block">
+        <a href="code.html">Coding</a>
+        <img src="images/coding pic.jpeg">
+      </div>
+      <div class="block">
+        <a href="about.html">My Bio</a>
+      </div>
+      <div class="block">
+        <a href="https://lavender-cyan-twrr.squarespace.com">Blog</a>
+      </div>
+      <div class="block">
+        <a href="https://www.linkedin.com/in/adrian-hatch-a1416925a">LinkedIn</a>
+      </div>
+    </div>
+    <p>“If an IT project works the first time, it was in your nightly dreams. Time to wake up and get to work.” – Cornelius Fichtner</p>
+  </section>
+
+  <section id="three">
+    <div class="grid g_two">
+      <div>
+        <h2>MY<span class="header-span">Skills</span></h2>
+        <p>Are you in need of a versatile professional who can bring a variety of skills to your team? Look no further! As a writer, coder, and designer, I bring a unique combination of creativity, technical expertise, and a hint of occasional computer-screen yelling to every project I tackle.</p>
+        <p>With my writing skills, I can craft compelling content that engages and informs your audience, whether it's a blog post, social media content, or marketing materials. I'm also experienced in creating and managing websites, thanks to my coding skills. From front-end design to back-end functionality, I can bring your digital vision to life.</p>
+        <p>I also pride myself on my design skills! Whether it's designing eye-catching graphics or crafting stunning layouts, I can elevate your branding and marketing efforts with my eye for detail and aesthetic sensibilities.</p>
+        <p>But what sets me apart from the rest is my occasional tendency to yell at my computer screen when things get tough. This isn't just a quirk; it's a testament to my dedication and perseverance. I'm not one to give up easily, and I'll do whatever it takes to ensure your project is a success.</p>
+        <p>So if you're looking for a multi-talented professional who can handle anything you throw their way, look no further. Let's create something amazing, together!</p>
+      </div>
+      <div class="flex column">
+        <div class="flex column">
+          <div class="flex jcsb">
+            <h4>Designer</h4><span>75%</span>
+          </div>
+          <progress value="75" max="100"></progress>
+        </div>
+        <div class="flex column">
+          <div class="flex jcsb">
+            <h4>Coder</h4><span>65%</span>
+          </div>
+          <progress value="65" max="100"></progress>
+        </div>
+        <div class="flex column">
+          <div class="flex jcsb">
+            <h4>Yelling at my monitor</h4><span>88%</span>
+          </div>
+          <progress value="88" max="100"></progress>
+        </div>
+        <div class="flex column">
+          <div class="flex jcsb">
+            <h4>Writing</h4><span>93%</span>
+          </div>
+          <progress value="93" max="100"></progress>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+ 
+  <section class="slider">
+    <input type="radio" name="slider" title="slide1" checked="checked" class="slider__nav"/>
+    <input type="radio" name="slider" title="slide2" class="slider__nav"/>
+    <input type="radio" name="slider" title="slide3" class="slider__nav"/>
+    <input type="radio" name="slider" title="slide4" class="slider__nav"/>
+    <div class="title9">
+      <h2>Testi<span>Monials</span></h2>
+    </div>
+    <div class="slider__inner">
+      <div class="slider__contents"><i class="slider__image fa fa-codepen"></i>
+        <div class="title9">
+          <h2>Testi<span>Monials</span></h2>
+        </div>
+        <h2 class="slider__caption">Elizabeth H.</h2>
+        <p class="slider__txt">"...was able to hit the ground running from day one. Adrian is also a great team player and a pleasure to work with."</p>
+      </div>
+      <div class="slider__contents"><i class="slider__image fa fa-newspaper-o"></i>
+        <h2 class="slider__caption">Jonathan C.</h2>
+        <p class="slider__txt">"..consistently delivered high-quality content that was engaging and informative. Ajay also showed a great attention to detail and was able to meet tight deadlines"</p>
+      </div>
+      <div class="slider__contents"><i class="slider__image fa fa-television"></i>
+        <h2 class="slider__caption">Spencer S.</h2>
+        <p class="slider__txt"> "I can confidently say that he is one of the best communicators I have ever worked with. He is always clear, concise, and timely in his communication, and he has a knack for keeping everyone involved in the project informed and engaged.."</p>
+      </div>
+      <div class="slider__contents"><i class="slider__image fa fa-diamond"></i>
+        <h2 class="slider__caption">Larry F.</h2>
+        <p class="slider__txt">"..working with Ajay has been an absolute pleasure. His attention to detail and eye for design are unparalleled. He is always able to take our design ideas and bring them to life in a way that exceeds our expectations. His design skills have helped to elevate our projects to the next level..</p>
+      </div>
+    </div>
+  </section>
+    <!-- END OF TESTIMONIALS -->
+  
+
+
+  </section>
+
+  <footer id="bottom">
+    <div class="widgets">
+      <a href="index.html"><img src="images/White Hot.png" alt=""></a>
+      <div class="widget">
+        <a href="https://lavender-cyan-twrr.squarespace.com">Not Inclined</a>
+      </div>
+      <div class="widget">
+        <a href="https://www.linkedin.com/in/adrian-hatch-a1416925a">Linkedin</a>
+      </div>
+      <div class="widget">
+        <a href="https://www.instagram.com/just.ajay/">Instagram</a>
+      </div>
+      <div class="widget">
+        <a href="https://twitter.com/AjayHatch">Twitter</a>
+      </div>
+    </div>
+    <div class="copy">
+      <a href="about.html">
+        Adrian Hatch </a><a href="#one">Scroll top &#x2191;</a>
+    </div>
+  </footer>
+</div>
+     
+ <script src="script.js"></script>
+  </body>
+</html>
