@@ -255,6 +255,7 @@ section#title {
 #main__img { 
   border-radius: 10px 100px / 120px;
   transition: transform 0.5s ease-in-out;
+  width: 530px;
 }
 
 
